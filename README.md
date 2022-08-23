@@ -1,7 +1,8 @@
 ## 프로젝트
 <img width="350" alt="Screen Shot 2022-08-05 at 6 55 15 PM" src="https://user-images.githubusercontent.com/102135145/185027151-60ad490c-6a83-43a1-abde-bcdc4da396c7.png">
 배포 사이트 : https://www.egorental.com<br>
-프로젝트 일정 : 2022.07.07 ~ 2022.08.16<br><br>
+프로젝트 일정 : 2022.07.07 ~ 2022.08.16<br>
+개발 인원 : 3인<br><br>
 
 프론트엔드 깃헙 링크 : https://github.com/MeoSeon12/egodaeyeo-frontend<br>
 백엔드 깃헙 링크 : https://github.com/MeoSeon12/egodaeyeo-backend<br>
@@ -10,54 +11,11 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 <br>
 
 ## 1. 프로젝트 주제
-### 당근마켓 모티브 개인 간 대여 서비스 플랫폼
-
-```
-중고물품을 사고 팔 수 있는 플랫폼은 대표적으로 중고나라와 당근마켓이 있는 것처럼
-잠깐 동안 필요한 물건이나, 내가 사고 싶었던 물건을 빌려서 써보기 위한
-대여 서비스를 대표하는 플랫폼이 있으면 좋을 것 같다는 생각에서 출발했습니다.
-```
+당근마켓 모티브 개인 간 대여 서비스 플랫폼
 
 <br>
 
-## 2. 머선12조 팀원 및 역할
-* ### **김규민** <a href="https://github.com/Roshu2">@Roshu2</a><br>
-  물품 목록 페이지 / 마이페이지 / 소셜로그인 / 검색 기능 / Contract 기능 / 채팅 기능 / 백엔드 배포<br>
-
-* ### **김철현** <a href="https://github.com/KimmyJay">@KimmyJay</a><br>
-  회원가입 / 로그인 / 소셜로그인 / 리뷰 모달 / 채팅 모달 / 채팅 기능 / 다크모드 / 신고 기능 / 백엔드 배포<br>
-  
-* ### **최재완** <a href="https://github.com/Jaewan-Choi">@Jaewan-Choi</a><br>
-  채팅 기능 / 알림 기능 / 물품 상세페이지 / 물품 등록, 수정 페이지 / 프론트 배포 / 다크모드 / 메인페이지 웰컴 박스<br>
-
-<br>
-
-## 3. 프로젝트 기능
-* ### **물품 조회**
-  * 사용자의 주소를 기반으로 같은 지역만 조회
-  * 다양한 물품 카테고리로 게시글 조회가 가능
-  * 제목으로 검색 가능
-
-* ### **물품 등록 및 수정**
-  * 대여하고자 하는 물품을 게시
-  * 최대 5개의 이미지, 카테고리, 가격 설정
-  * 등록한 물품 수정
-
-* ### **채팅**
-  * 문의자와 물품 등록자 연결
-  * 1:1 실시간 채팅 및 알림
-  * 유저는 채팅창을 통해서 대여 신청, 수락, 거절, 종료
-  * 리뷰 등록
-
-* ### **마이페이지**
-  * 거래 내역 조회
-  * 찜 목록
-  * 유저 정보 수정
-  * 피드백 작성
-
-<br>
-
-## 4. 기술 스택
+## 2. 기술 스택
 * ### 백엔드
   * Python 3.9
   * Django 4.0
@@ -88,7 +46,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
     * Netlify
 <br>
 
-## 4-1. 기술 스택 선정 이유
+## 2-1. 기술 스택 선정 이유
 * **Django / DRF**
   > Serializer, 유저 관리, REST API 등 Django에서 제공하는 다양한 기능들을 사용하기 위해 채용
 * **Django Channels**
@@ -118,34 +76,27 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 
 <br>
 
-## 5. 아키텍쳐
-![image](https://user-images.githubusercontent.com/102135145/185027631-738d072d-d2ff-4b60-a41e-8bb4f4fba405.png)
-
-<br>
-
-## 6. 버전
-* ### v1.0
-  * 배포
-* ### v1.01
-  * 401 에러 수정
-  * 채팅 알림 동기화
-  * 재거래 시 에러 수정
-* ### v1.1
-  * 물품 페이지와 사이트 소개 페이지 병합
-  * 카테고리 & 섹션 필터 UI 변경
-  * 마이페이지에 대여 상태 업데이트 버튼 추가
-* ### v1.2
-  * 신고기능 추가
-  * 다크모드 추가
-  
-<br>
-
-## 7. DB 설계 ERD
+## 3. DB 설계 ERD
 
 <img src="https://user-images.githubusercontent.com/104349901/185032482-c6b7c6c8-a164-4b71-8318-ba74ef12a1d5.png">
 
 <br>
 
-## 8. 발표 영상 및 PPT
-<a href="https://www.youtube.com/watch?v=hXkQHUCjkWM&ab_channel=%EB%A1%9C%EC%8A%88" target="blank" rel="noreferrer noopener">YouTube 바로가기</a><br>
-<a href="https://docs.google.com/presentation/d/151z1B6_qrS7OdPhJJKruioRGog89LuFyoj5gdUyjYIM/edit?usp=sharing">구글 슬라이드 바로가기</a>
+## 4. 담당 작업 (최재완)
+* 채팅 기능
+* 알림 기능
+* 물품 상세페이지
+* 물품 등록, 수정 페이지
+* 프론트 배포
+* 다크모드
+* 메인페이지 웰컴 박스<br>
+
+담당 역할의 프론트와 백엔드 모두 작업하였습니다<br>
+
+<br>
+
+## 5. 핵심 기능
+담당한 작업 중에서 핵심 기능은 채팅과 알림 기능입니다<br>
+사이트의 이용에서 필수적인 물품 대여 문의부터 리뷰를 남기는 기능까지<br>
+모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
+
