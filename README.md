@@ -27,19 +27,16 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
   * CSS
 
 * ### 배포
-  * ### 백엔드
-    * AWS EC2
-    * AWS S3
-    * AWS RDS PostgreSQL
-    * AWS Route 53
-    * Github actions
-    * Docker 20.10.12
-    * Nginx 1.22.0
-    * Gunicorn 20.1.0
-    * Daphne 3.0.2
-  
-  * ### 프론트엔드
-    * Netlify
+	* AWS EC2
+	* AWS S3
+	* AWS RDS PostgreSQL
+	* AWS Route 53
+	* Github actions
+	* Docker 20.10.12
+	* Nginx 1.22.0
+	* Gunicorn 20.1.0
+	* Daphne 3.0.2
+	* Netlify
 <br>
 
 ## 1-1. 기술 스택 선정 이유
