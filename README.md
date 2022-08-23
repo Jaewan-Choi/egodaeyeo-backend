@@ -98,7 +98,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
 
 <details markdown="1">
- <summary><span style="color:red">기능 설명 보기</span></summary>
+ <summary>기능 설명 보기</summary>
   <br>
   Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에서는 Django의 Channels 라이브러리를 사용하여 비동기 요청을 처리합니다<br>
   채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>  
