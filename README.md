@@ -91,38 +91,123 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 
 <br>
 
-## 3-1. 핵심 기능
-담당한 작업 중에서 핵심 기능은 채팅과 알림 기능입니다<br>
+## 4. 핵심 기능
+### 4-1. 채팅과 알림 기능
+담당한 작업 중에서 첫번째 핵심 기능은 채팅과 알림 기능입니다<br>
 사이트 이용에서 사용자 간 필수적인 물품 대여 문의부터 리뷰를 남기는 기능까지<br>
 모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
 
-<details>
- <summary>핵심 기능 보기</summary>
- <br>
- <div markdown="1">
+<details markdown="1">
+ <summary style="font-Weight : bold; color : #E43914;">기능 설명 보기</summary>
+		<br>
   Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에서는 Django의 Channels 라이브러리를 사용하여 비동기 요청을 처리합니다<br>
-  채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>
-  채팅은 개별 채팅방마다 다른 주소를 사용하고 채팅창을 열었을 때만 해당 웹소켓에 연결하고 닫으면 끊어지지만,<br>
+  채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>  
+  채팅은 개별 채팅방마다 다른 주소를 사용하고 채팅창을 열었을 때만 해당 웹소켓에 연결하고 닫으면 끊어지지만,<br>  
   알림 기능은 로그인 시 웹소켓에 연결하고 계속해서 연결을 유지하고 있는 차이점이 있습니다<br>
-  <br>
-  클라이언트가 비동기 요청 보낼 때
-  ```js
-  // 알림 웹소켓 보내기
-     sendAlert(roomId, senderId, receiverId, contractStatus) {
-         // 상대방에게 채팅 알림 보냄
-         chatAlertSocket.send(JSON.stringify({
-             'room_id': roomId,
-             'sender': senderId,
-             'receiver': receiverId,
-             'status': contractStatus,
-             'created_at': Date.now(),
-         }))
-     }
-  ```
+		<br>
+		
+  * 클라이언트가 비동기 요청 보낼 때 ->
   <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L695">코드 보러가기</a>
+  
+```js
+// 알림 웹소켓 보내기
+sendAlert(roomId, senderId, receiverId, contractStatus) {
+    // 상대방에게 채팅 알림 보냄
+    chatAlertSocket.send(JSON.stringify({
+        'room_id': roomId,
+        'sender': senderId,
+        'receiver': receiverId,
+        'status': contractStatus,
+        'created_at': Date.now(),
+    }))
+}
+```
+<br>
 
-  서버에서 비동기 요청을 처리하고 응답할 때
+  * 서버에서 비동기 요청을 처리하고 응답할 때 ->
   <a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/5d7870b682646070adf40cbfa1d7caab39fa6ba3/chat/consumers.py#L212">코드 보러가기</a>
+  
+  ```py
+  class AlertConsumer(AsyncConsumer):
 
- </div>
+    async def websocket_connect(self, event):
+
+        user_id = self.scope['url_route']['kwargs']['user_id']
+        chat_alert = f'user_chat_alert_{user_id}'
+        self.chat_alert = chat_alert
+
+        await self.channel_layer.group_add(
+            chat_alert,
+            self.channel_name
+        )
+        await self.send({
+            'type': 'websocket.accept'
+        })
+
+    # 웹소켓에 데이터 들어옴
+    async def websocket_receive(self, event):
+
+        received_data = json.loads(event['text'])
+        receiver_id = received_data.get('receiver')
+
+        # 데이터 가공
+        sender = await self.get_user_object(received_data['sender'])  # 작성자 닉네임
+        title = await self.get_title_object(received_data['room_id'])
+
+        # 수신자에게 보낼 데이터
+        response = {
+            'sender': sender,
+            'title': title,
+            'room_id': received_data['room_id'],
+            'status': received_data['status'],
+            'created_at': received_data['created_at']
+        }
+
+        # 수신자에게 온메시지에 보냄
+        other_user_chat_alert = f'user_chat_alert_{receiver_id}'
+
+        await self.channel_layer.group_send(
+            other_user_chat_alert,
+            {
+                'type': 'chat_message',
+                'text': json.dumps(response)
+            }
+        )
+
+    # 웹소켓 연결종료
+    async def websocket_disconnect(self, event):
+        pass
+
+    async def chat_message(self, event):
+        await self.send({
+            'type': 'websocket.send',
+            'text': event['text'],
+        })
+
+    # 데이터 가공 (발신자 닉네임 조회)
+    @database_sync_to_async
+    def get_user_object(self, sender_id):
+        qs = User.objects.get(id=sender_id)
+        return qs.nickname
+
+    # 데이터 가공 (채팅창 제목 조회)
+    @database_sync_to_async
+    def get_title_object(self, room_id):
+        qs = ChatRoom.objects.get(id=room_id)
+        return qs.item.title
+  ```
+  <br>
+  
+  * 클라이언트가 서버에서 응답을 받을 때 ->
+  <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L656">코드 보러가기</a>
+  
+  ```js
+  // 알림 수신
+  chatAlertSocket.onmessage = function (e) {
+      // 알림 데이터
+      let data = JSON.parse(e.data)
+      if (chatSocket.url != `${webSocketBaseUrl}/chats/${data.room_id}`) {
+          ....
+      }
+  ```
 </details>
