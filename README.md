@@ -345,3 +345,8 @@ def post(self, request):
 ```
 <a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/2b38b3cff3b877e3d9a7d8830d25ad74f1ab4a2d/item/views.py#L160">코드 보러가기</a>
 </details>
+
+<br>
+
+## 5. 후기
+https://velog.io/@wkdudhksl/이거대여-후기
