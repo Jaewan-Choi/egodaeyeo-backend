@@ -98,31 +98,31 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
 
 <details markdown="1">
- <summary style="font-Weight : bold; color : #E43914;">기능 설명 보기</summary>
-		<br>
+ <summary><span style="color:red">기능 설명 보기</span></summary>
+  <br>
   Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에서는 Django의 Channels 라이브러리를 사용하여 비동기 요청을 처리합니다<br>
   채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>  
   채팅은 개별 채팅방마다 다른 주소를 사용하고 채팅창을 열었을 때만 해당 웹소켓에 연결하고 닫으면 끊어지지만,<br>  
   알림 기능은 로그인 시 웹소켓에 연결하고 계속해서 연결을 유지하고 있는 차이점이 있습니다<br>
-		<br>
+  <br>
 		
   * 클라이언트가 비동기 요청 보낼 때 ->
   <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L695">코드 보러가기</a>
   
-```js
-// 알림 웹소켓 보내기
-sendAlert(roomId, senderId, receiverId, contractStatus) {
-    // 상대방에게 채팅 알림 보냄
-    chatAlertSocket.send(JSON.stringify({
-        'room_id': roomId,
-        'sender': senderId,
-        'receiver': receiverId,
-        'status': contractStatus,
-        'created_at': Date.now(),
-    }))
-}
-```
-<br>
+  ```js
+  // 알림 웹소켓 보내기
+  sendAlert(roomId, senderId, receiverId, contractStatus) {
+      // 상대방에게 채팅 알림 보냄
+      chatAlertSocket.send(JSON.stringify({
+          'room_id': roomId,
+          'sender': senderId,
+          'receiver': receiverId,
+          'status': contractStatus,
+          'created_at': Date.now(),
+      }))
+  }
+  ```
+  <br>
 
   * 서버에서 비동기 요청을 처리하고 응답할 때 ->
   <a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/5d7870b682646070adf40cbfa1d7caab39fa6ba3/chat/consumers.py#L212">코드 보러가기</a>
