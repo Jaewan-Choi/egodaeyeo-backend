@@ -77,15 +77,16 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 <br>
 
 ## 3. 담당 작업 (최재완)
-* 채팅 기능
+* 채팅 기능 (공동 작업 with 김규민)
 * 알림 기능
 * 물품 상세페이지
 * 물품 등록, 수정 페이지
 * 프론트 배포
-* 다크모드
+* 다크모드 (공동 작업 with 김철현)
 * 메인페이지 웰컴 박스<br>
 
-담당 역할의 프론트와 백엔드 모두 작업하였습니다<br>
+역할은 팀장으로서 참여하였고, 프로젝트 발표 또한 담당하였습니다<br>
+담당 작업의 프론트와 백엔드 모두 작업하였습니다<br>
 
 <br>
 
@@ -95,18 +96,18 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 사이트 이용에서 사용자 간 필수적인 물품 대여 문의부터 리뷰를 남기는 기능까지<br>
 모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
 
+Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에서는 Django의 Channels 라이브러리를 사용하여 비동기 요청을 처리합니다<br>
+
+채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>
+채팅은 개별 채팅방마다 다른 주소를 사용하고 채팅창을 열었을 때만 해당 웹소켓에 연결하고 닫으면 끊어지지만,<br>
+알림 기능은 로그인 시 웹소켓에 연결하고 계속해서 연결을 유지하고 있는 차이점이 있습니다<br>
+
 <details markdown="1">
- <summary>기능 설명 보기</summary>
-  <br>
-  Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에서는 Django의 Channels 라이브러리를 사용하여 비동기 요청을 처리합니다<br>
-  채팅 기능과 알림 기능 둘 다 로직은 비슷하며,<br>  
-  채팅은 개별 채팅방마다 다른 주소를 사용하고 채팅창을 열었을 때만 해당 웹소켓에 연결하고 닫으면 끊어지지만,<br>  
-  알림 기능은 로그인 시 웹소켓에 연결하고 계속해서 연결을 유지하고 있는 차이점이 있습니다<br>
+ <summary>코드 설명 보기</summary>
   <br>
 		
-  * 클라이언트가 비동기 요청 보낼 때 ->
-  <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L695">코드 보러가기</a>
-  
+  * 클라이언트가 비동기 요청 보낼 때
+  > 웹소켓의 .send() 메소드를 사용하여 비동기 요청을 보냅니다
   ```js
   // 알림 웹소켓 보내기
   sendAlert(roomId, senderId, receiverId, contractStatus) {
@@ -120,11 +121,12 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
       }))
   }
   ```
-  <br>
+  <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L695">코드 보러가기</a>
+  <br><br>
 
-  * 서버에서 비동기 요청을 처리하고 응답할 때 ->
-  <a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/5d7870b682646070adf40cbfa1d7caab39fa6ba3/chat/consumers.py#L212">코드 보러가기</a>
-  
+  * 서버에서 비동기 요청을 처리하고 응답할 때
+  > Django Channels 라이브러리를 활용하여 웹소켓의 연결, 요청, 재가공, 응답, 종료를 처리합니다
+ 
   ```py
   class AlertConsumer(AsyncConsumer):
 
@@ -194,10 +196,11 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
         qs = ChatRoom.objects.get(id=room_id)
         return qs.item.title
   ```
-  <br>
+  <a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/5d7870b682646070adf40cbfa1d7caab39fa6ba3/chat/consumers.py#L212">코드 보러가기</a>
+  <br><br>
   
-  * 클라이언트가 서버에서 응답을 받을 때 ->
-  <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L656">코드 보러가기</a>
+  * 클라이언트가 서버에서 응답을 받을 때
+  > 웹소켓은 onmessage 메소드를 사용하여 서버에서 응답한 데이터를 처리합니다
   
   ```js
   // 알림 수신
@@ -208,4 +211,137 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
           ....
       }
   ```
+  <a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/index/js/chat.js#L656">코드 보러가기</a>
+</details>
+
+<br>
+
+### 4-2. 이미지 첨부 및 수정
+물품 등록 및 수정 페이지에서 이미지를 최대 5개, 총 50MB까지 첨부가 가능하도록 설계했습니다<br>
+이미지를 첨부하면 각각의 미리보기와 파일제목 목록이 나타나며, 개별적으로 제거 혹은 추가가 가능합니다<br>
+
+<details markdown="1">
+ <summary>코드 설명 보기</summary>
+  <br>
+
+  * 이미지 첨부 및 제거
+  > file 객체에 담은 단일 혹은 복수의 이미지 파일을 리스트로 구성하여 인덱스를 통해 각각의 이미지에 접근하여 제거가 가능하며,<br>
+  > 리스트로 append 하여 이미 첨부한 파일 리스트에 추가로 첨부가 가능합니다<br>
+  > 이미지 제거 시 리스트에서 인덱스가 달라지는 것을 고려하여,<br>
+  > 리스트에서 완전히 제거하는 것이 아닌 'is_delete' 키를 추가하여 최종적으로 서버로 전달할 것인지 판단합니다
+
+```js
+let fileNo = 0  // 이미지 마다 다른 id를 지정해주기 위함
+let filesArr = []  // 업로드한 이미지들을 담을 파일 리스트
+
+// 이미지 첨부 시
+function imgUpload(obj) {
+    let maxFileCnt = 5   // 첨부파일 최대 개수
+    let attFileCnt = document.querySelectorAll('.filebox').length    // 기존 추가된 첨부파일 개수
+    let remainFileCnt = maxFileCnt - attFileCnt    // 추가로 첨부가능한 개수
+    let curFileCnt = obj.files.length  // 현재 선택된 첨부파일 개수
+    
+    // 첨부파일 개수 확인
+    // 최대 개수 초과 시
+    if (curFileCnt > remainFileCnt) {
+        alert("이미지는 최대 " + maxFileCnt + "개 까지 첨부 가능합니다.")
+    }
+
+    // 최대 개수 넘지 않았을 시
+    else {
+        for (const file of obj.files) {
+            const prImg = document.getElementById('pr-img')
+            prImg.style.display = 'grid'
+            
+            // 파일 배열에 담기
+            var blob = file.slice(0, file.size, 'image/png')
+            newFile = new File([blob], `${file.name.split('.')[0]}-${(new Date / 1)}.png`, { type: 'image/png' })
+            filesArr.push(newFile)
+
+            // 이미지 미리보기
+            let img = new Image()
+            img.src = URL.createObjectURL(file)
+            
+            let previewHtmlData = img
+            previewHtmlData.setAttribute('id', `preview-img-${fileNo}`)
+            $('.file-input-custom').before(previewHtmlData)
+            
+            // 이미지 목록에 추가
+            let htmlData = ''
+            htmlData += '<div id="file' + fileNo + '" class="filebox">'
+            htmlData += '   <p class="name">' + file.name + '</p>'
+            htmlData += '   <a class="delete" onclick="deleteFile(' + fileNo + ')">❌</a>'
+            htmlData += '</div>'
+            $('.file-list').append(htmlData)
+
+            fileNo++
+        }
+    }
+}
+
+// 첨부파일 삭제 
+function deleteFile(num) {
+    document.querySelector("#file" + num).remove()
+    document.querySelector("#preview-img-" + num).remove()
+    filesArr[num].is_delete = true
+}
+```
+<a href="https://github.com/MeoSeon12/egodaeyeo-frontend/blob/5c695571da923125f00fd8df82d2111e01a75137/item/js/upload.js#L18">코드 보러가기</a>
+<br><br>
+
+* 서버에서 전달받은 데이터 처리
+> 폼데이터로 게시글의 여러 인풋과 이미지 리스트가 함께 들어오는데,<br>
+> DB 구조 상 글 내용과 이미지를 따로 저장할 필요가 있어<br>
+> 각각 벨리데이션을 진행하고 결과에 따라 다른 응답을 보내줍니다<br>
+> 
+> 내용이 먼저 저장되고 이미지 벨리데이션이 통과되지 않는 경우에는<br>
+> 기존에 저장된 내용을 삭제하는 트랜잭션 기능도 구현해보았습니다
+
+```py
+# 물품 등록하기 기능
+def post(self, request):
+
+    # 중략...
+
+    item_serializer = ItemPostSerializer(data=item_data)
+
+    # 아이템 모델 벨리데이션 합격하면 저장
+    if item_serializer.is_valid():
+        item_obj = item_serializer.save()
+
+        # 이미지 포함하는지 체크
+        if not 'image' in request.data:
+            return Response(item_obj.id, status=status.HTTP_200_OK)
+        else:
+            images = request.data.pop('image')
+
+            passed_item_image_data_list = []
+            for image in images:
+                item_image_data = {
+                    'item': item_obj.id,
+                    'image': image,
+                }
+
+                item_image_serializer = ItemImageSerializer(data=item_image_data)
+
+                # 아이템 이미지 모델 벨리데이션 합격하면 합격 리스트에 추가
+                if item_image_serializer.is_valid():
+                    passed_item_image_data_list.append(item_image_serializer)
+
+                # 아이템 이미지 모델 벨리데이션 불합격하면 아이템 모델 삭제
+                else:
+                    item_obj.delete()
+                    return Response(item_image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # 모든 이미지가 벨리데이션에 합격했다면 저장
+            for passed_item_image_data in passed_item_image_data_list:
+                passed_item_image_data.save()
+
+            return Response(item_obj.id, status=status.HTTP_200_OK)
+
+    # 아이템 모델 벨리데이션 불합격
+    else:
+        return Response(item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+<a href="https://github.com/Jaewan-Choi/egodaeyeo-backend/blob/2b38b3cff3b877e3d9a7d8830d25ad74f1ab4a2d/item/views.py#L160">코드 보러가기</a>
 </details>
