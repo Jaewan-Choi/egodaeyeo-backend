@@ -32,7 +32,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 	* AWS S3
 	* AWS RDS
 	* AWS Route 53
-	* Github actions
+	* Github Actions
 	* Docker 20.10.12
 	* Nginx 1.22.0
 	* Gunicorn 20.1.0
