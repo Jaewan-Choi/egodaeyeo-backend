@@ -18,6 +18,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
   * Django Rest Framework 3.13
   * Django Rest Framework simple-jwt 5.2.0
   * Django Channels 3.0.5
+  * PostgreSQL
 
 * ### 프론트엔드
   * Websocket
@@ -29,7 +30,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 * ### 배포
 	* AWS EC2
 	* AWS S3
-	* AWS RDS PostgreSQL
+	* AWS RDS
 	* AWS Route 53
 	* Github actions
 	* Docker 20.10.12
