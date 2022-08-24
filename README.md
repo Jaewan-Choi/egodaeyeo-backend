@@ -18,7 +18,10 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
   * Django Rest Framework 3.13
   * Django Rest Framework simple-jwt 5.2.0
   * Django Channels 3.0.5
-  * PostgreSQL
+  * Docker 20.10.12
+  * Nginx 1.22.0
+  * Gunicorn 20.1.0
+  * Daphne 3.0.2
 
 * ### 프론트엔드
   * Websocket
@@ -26,18 +29,16 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
   * Javascript
   * JQuery
   * CSS
+  
+* ### 데이터베이스
+  * AWS RDS PostgreSQL
+  * AWS S3
 
 * ### 배포
-	* AWS EC2
-	* AWS S3
-	* AWS RDS
-	* AWS Route 53
-	* Github Actions
-	* Docker 20.10.12
-	* Nginx 1.22.0
-	* Gunicorn 20.1.0
-	* Daphne 3.0.2
-	* Netlify
+  * AWS EC2
+  * AWS Route 53
+  * Github Actions
+  * Netlify
 <br>
 
 ## 1-1. 기술 스택 선정 이유
@@ -77,13 +78,50 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 <br>
 
 ## 3. 담당 작업 (최재완)
+
 * 채팅 기능 (공동 작업 with 김규민)
+
+  - 개별 채팅방 오픈 시 개별 채팅방의 ID값을 활용해 채팅방 마다 다른 웹소켓 주소에 연결
+  - 채팅 작성 혹은 거래 상태 업데이트 시 send()로 데이터를 백엔드에 전송
+  - Django Channels의 @database_sync_to_async 데코레이터와 create() 메소드로 데이터를 DB에 저장
+  - 채팅 그룹으로 데이터를 전송하고 sender 값을 체크하여 작성자와 수신자에 맞게 레이아웃을 보여줌
+  - 채팅방을 닫거나 다른 채팅방 오픈 시 기존 접속 채팅 웹소켓 websocket.close() 메소드를 사용하여 연결을 끊음
+  
 * 알림 기능
-* 물품 상세페이지
-* 물품 등록, 수정 페이지
+
+  - 로그인 시 유저 고유의 웹소켓 주소로 연결
+  - 채팅을 보낼 때 수신 유저의 웹소켓 주소로 send()
+  - Django Channels로 wss 프로토콜(ASGI)을 처리
+  - 채팅 메시지 DB 모델에 is_read 필드를 추가하여 읽은 여부를 판단 후 알림을 보냄
+  - 수신자는 onmessage()를 통해 응답 데이터를 처리
+  - 채팅을 읽으면 is_read 필드를 True로 수정
+  
+* 물품 등록 / 수정 / 삭제
+
+  - 사용자의 인풋값을 받은 폼데이터를 POST 요청을 통해 DB에 저장
+  - 프론트에서는 인풋의 포맷에 제한 두기, null 체크 등을 진행
+  - 백엔드에서는 벨리데이션을 통해 모델에 적합한 데이터인지 검사
+  - 수정 시 게시글의 ID값을 활용하여 GET 요청으로 DB에 저장된 데이터를 활용
+  - 수정 시 최종적으로 수정된 데이터를 PUT 요청을 통해 DB에 반영
+  - 삭제 시 작성자 본인 여부를 토큰의 payload와 DB의 데이터를 교차검증을 통해 체크 후 삭제
+  
 * 프론트 배포
+
+  - Netlify로 정적 호스팅하여 배포
+  - 프로젝트 front-End Github 의 main 브랜치와 자동으로 동기화
+  - 네임서버를 추가하여 구매한 도메인 적용
+  
 * 다크모드 (공동 작업 with 김철현)
-* 메인페이지 웰컴 박스<br>
+
+  - 로그인 유저의 로컬 스토리지에 다크모드 여부를 저장
+  - 로컬스토리지의 다크모드 값을 if문의 분기점으로 다른 스타일을 적용
+  
+* 메인페이지 웰컴 박스와 스크롤 기능
+
+ - 웰컴 박스 레이아웃 작업
+ - scrollTop 메소드에서 offset().top 으로 스크롤을 이동
+
+<br>
 
 역할은 팀장으로서 참여하였고, 프로젝트 발표 또한 담당하였습니다<br>
 담당 작업의 프론트와 백엔드 모두 작업하였습니다<br>
