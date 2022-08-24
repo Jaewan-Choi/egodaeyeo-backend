@@ -396,9 +396,21 @@ def post(self, request):
   	* 페이지 로딩 시 채팅 웹소켓에 연결하도록 하였는데, 그러다보니 모든 채팅방이 하나의 웹소켓을 사용하여 채팅이 공유되는 문제 발생
   * 해결 : 
   	* 채팅 웹소켓 연결을 페이지 로딩 시가 아닌 개별 채팅방을 열 때 연결시킴
+  	* 채팅방을 닫거나, 다른 채팅방을 열면 기존에 접속한 웹소켓을 끊음
+	  ```js
+	  async function openChatRoom(roomId) {
+	    // 이미 접속한 채팅, 거래 웹소켓이 있다면 종료
+	    if (chatSocket != '' && contractSocket != '') {
+		chatSocket.close()
+		contractSocket.close()
+		chatSocket = ''
+		contractSocket = ''
+	    }
+	  ```
 	* 개별 채팅방의 id값을 웹소켓 주소에 할당하여 채팅방마다 다른 웹소켓에 연결시킴
-	* 채팅방을 닫거나, 다른 채팅방을 열면 기존에 접속한 웹소켓을 끊음
-  
+	  ```js
+	  chatSocket = new WebSocket(`${webSocketBaseUrl}/chats/${roomId}`)
+	  ```
 </details>
 <br>
 
