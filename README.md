@@ -72,7 +72,7 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 <br>
 
 ## 2. DB 설계 ERD
-
+https://www.erdcloud.com/d/zfZo5E3pKdEorSGBX
 <img src="https://user-images.githubusercontent.com/104349901/185032482-c6b7c6c8-a164-4b71-8318-ba74ef12a1d5.png">
 
 <br>
@@ -118,8 +118,8 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
   
 * 메인페이지 웰컴 박스와 스크롤 기능
 
- - 웰컴 박스 레이아웃 작업
- - scrollTop 메소드에서 offset().top 으로 스크롤을 이동
+  - 웰컴 박스 레이아웃 작업
+  - scrollTop 메소드에서 offset().top 으로 스크롤을 이동
 
 <br>
 
