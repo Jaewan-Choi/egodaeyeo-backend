@@ -71,13 +71,18 @@ S.A 링크 : https://quixotic-wok-871.notion.site/S-A-3183ff7202e942099238af3eff
 
 <br>
 
-## 2. DB 설계 ERD
+## 2. API 명세서
+<a href="https://documenter.getpostman.com/view/20826963/VUqymsv9#intro">포스트맨 DOCS 바로가기</a>
+
+<br>
+
+## 3. DB 설계 ERD
 https://www.erdcloud.com/d/zfZo5E3pKdEorSGBX
 <img src="https://user-images.githubusercontent.com/104349901/185032482-c6b7c6c8-a164-4b71-8318-ba74ef12a1d5.png">
 
 <br>
 
-## 3. 담당 작업 (최재완)
+## 4. 담당 작업 (최재완)
 
 * 채팅 기능 (공동 작업 with 김규민)
 
@@ -128,8 +133,8 @@ https://www.erdcloud.com/d/zfZo5E3pKdEorSGBX
 
 <br>
 
-## 4. 핵심 기능
-### 4-1. 채팅과 알림 기능
+## 5. 핵심 기능
+### 5-1. 채팅과 알림 기능
 담당한 작업 중에서 첫번째 핵심 기능은 채팅과 알림 기능입니다<br>
 사용자 간 실시간 채팅과 알림, 그리고 사이트 이용에 필수적인 물품 대여 문의부터 리뷰를 남기는 기능까지<br>
 모두 채팅에서 이루어질 수 있도록 설계되어있습니다<br>
@@ -254,7 +259,7 @@ Websocket의 wss 프로토콜을 이용하여 서버와 통신하고 서버에�
 
 <br>
 
-### 4-2. 이미지 첨부 및 수정
+### 5-2. 이미지 첨부 및 수정
 물품 등록 및 수정 페이지에서 이미지를 최대 5개, 총 50MB까지 첨부가 가능하도록 설계했습니다<br>
 이미지를 첨부하면 각각의 미리보기와 파일제목 목록이 나타나며, 개별적으로 제거 혹은 추가가 가능합니다<br>
 
@@ -386,8 +391,8 @@ def post(self, request):
 
 <br>
 
-## 5. 트러블 슈팅
-### 5-1. 채팅이 모든 채팅방에 공유가 되는 문제
+## 6. 트러블 슈팅
+### 6-1. 채팅이 모든 채팅방에 공유가 되는 문제
 <details markdown="1">
  <summary>자세한 내용 보기</summary>
   <br>
@@ -414,5 +419,5 @@ def post(self, request):
 </details>
 <br>
 
-## 6. 후기
+## 7. 후기
 https://velog.io/@wkdudhksl/이거대여-후기
