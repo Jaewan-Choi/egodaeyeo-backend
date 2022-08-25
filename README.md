@@ -398,10 +398,10 @@ def post(self, request):
   <br>
   
   * 문제 : 
-  	* 페이지 로딩 시 채팅 웹소켓에 연결하도록 하였는데, 그러다보니 모든 채팅방이 하나의 웹소켓을 사용하여 채팅이 공유되는 문제 발생
+  	* 페이지 로딩 시 채팅 웹소켓에 연결하도록 하였는데, 그러다보니 모든 채팅방이 하나의 웹소켓을 사용하여 채팅이 공유되는 문제 발생했습니다
   * 해결 : 
-  	* 채팅 웹소켓 연결을 페이지 로딩 시가 아닌 개별 채팅방을 열 때 연결시킴
-  	* 채팅방을 닫거나, 다른 채팅방을 열면 기존에 접속한 웹소켓을 끊음
+  	* 채팅 웹소켓 연결을 페이지 로딩 시가 아닌 개별 채팅방을 열 때 연결시켰습니다
+  	* 채팅방을 닫거나, 다른 채팅방을 열면 기존에 접속한 웹소켓을 끊었습니다
 	  ```js
 	  async function openChatRoom(roomId) {
 	    // 이미 접속한 채팅, 거래 웹소켓이 있다면 종료
@@ -412,10 +412,66 @@ def post(self, request):
 		contractSocket = ''
 	    }
 	  ```
-	* 개별 채팅방의 id값을 웹소켓 주소에 할당하여 채팅방마다 다른 웹소켓에 연결시킴
+	* 개별 채팅방의 id값을 웹소켓 주소에 할당하여 채팅방마다 다른 웹소켓에 연결시켰습니다
 	  ```js
 	  chatSocket = new WebSocket(`${webSocketBaseUrl}/chats/${roomId}`)
 	  ```
+</details>
+<br>
+
+### 6-2. 데이터베이스 다수 조건 쿼리와 정렬 문제
+<details markdown="1">
+ <summary>자세한 내용 보기</summary>
+  <br>
+  
+  * 문제 : 
+  	* 알림 기능 구현에서 채팅 메시지를 종류에 따라 구분하여 데이터 처리해야했습니다
+  	* 구분되어 처리된 데이터를 다시 합치고 시간 순으로 정렬을 해야했습니다
+  	* 개발 버전과 배포 버전이 같은 코드임에도 정렬 순서가 다르고 매번 순서가 뒤죽박죽 바뀌는 문제가 발생했습니다
+  * 해결 : 
+  	* 채팅 메시지에 신청 메시지인지 아닌지 구분해주는 'application' boolean 필드를 추가해서 해당 필드로 조회했습니다
+	* 구분된 메시지들을 원하는 구조에 맞게 데이터 처리 후 리스트에 append()로 다시 통합했습니다
+	```py
+	unread_message_list = []
+	    for joined_chatroom in joined_chatrooms:
+		# 읽지않은 채팅
+		latest_unread_chat = joined_chatroom.chatmessage_set.filter(
+		    is_read=False, application=False).exclude(user=user_id)
+		if latest_unread_chat.exists():
+		    latest_unread_chat = latest_unread_chat.last()
+		    latest_unread_chat = {
+			'room_id': joined_chatroom.id,
+			'title': joined_chatroom.item.title,
+			'sender': latest_unread_chat.user.nickname,
+			'created_at': latest_unread_chat.created_at,
+			'status': None,
+		    }
+		    unread_message_list.append(latest_unread_chat)
+		# 읽지않은 거래상태
+		latest_unread_contract = joined_chatroom.chatmessage_set.filter(
+		    is_read=False, application=True).exclude(user=user_id)
+		if latest_unread_contract.exists():
+		    latest_unread_contract = latest_unread_contract.last()
+		    latest_unread_contract = {
+			'room_id': joined_chatroom.id,
+			'title': joined_chatroom.item.title,
+			'sender': latest_unread_contract.user.nickname,
+			'created_at': latest_unread_contract.created_at,
+			'contract_type': latest_unread_contract.contract_type,
+		    }
+		    unread_message_list.append(latest_unread_contract)
+	```
+	* 개발 버전에서는 따로 정렬에 대한 정의를 해주지않아도 기본값이 id 순으로 나오고 그게 곧 시간 순서라서 문제가 없었습니다<br>
+	  그런데 배포 버전에서는 매 실행마다 조회한 쿼리셋의 정렬 순서가 랜덤으로 정렬되어있었습니다
+	* 문제에 대한 해결은 append 한 리스트를 시간 순으로 정렬하는 것으로 굉장히 간단하게 해결이 가능하였지만
+	  ```py
+	  unread_message_list.sort(key=lambda x: x['created_at'])
+	  ```
+	* 도대체 왜? 개발 때와 배포가 같은 코드인데도 다른 결과가 나오는지 원인에 대한 호기심이 생겼습니다
+	* 오랜 시간 팀원과 함께 원인 탐색을 한 뒤 개발, 배포 버전이 서로 다른 DB를 사용하고 있고<br>
+	  DB 마다 필터링시 정렬을 지정해주지않으면 디폴트로 다른 기준을 갖고 정렬하여 보여준다는 것을 알았습니다
+	* 각각 DB의 공식 문서에 따르면 필터링 시 개발 버전에 사용한 MySQL, SQLite 는 id 순으로 필터링하며,<br>
+	  배포 버전에 사용한 PostgreSQL 에서는 랜덤 순으로 필터링 된다는 것을 알게됨으로써 원인도 파악하였습니다
 </details>
 <br>
 
